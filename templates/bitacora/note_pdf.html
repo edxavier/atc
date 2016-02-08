@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Reporte de nota {{note.id}}</title>
+
+    <style>
+
+			@page { 
+				size: letter;
+				 @frame header_frame {           /* Static Frame */
+		            -pdf-frame-content: header_content;
+		            left: 50pt; width: 510pt; top: 45pt; height: 40pt;
+		            border:solid 0px white;
+		        }
+		        @frame content_frame {          /* Content Frame */
+		            left: 50pt; width: 510pt; top: 77pt; height: 660pt;
+					border:solid 0px white;
+
+		        }
+		        @frame footer_frame {           /* Another static Frame */
+		            -pdf-frame-content: footer_content;
+		            left: 50pt; width: 510pt; top: 745pt; height: 33pt;
+					border:solid 0px white;
+		        }
+				
+			 }
+			 table { -pdf-keep-with-next: true; }
+	</style>
+</head>
+<body>
+
+
+<table style="font-family: roboto; border-bottom: 1px solid #004D40; color:#004D40" id="header_content">
+	<tr style='font-size:16px'>
+		<th style="width:65% ; text-align:left">
+			<h5>Bitacora de incidentes operacionales ATC </h5>
+		</th>
+		<th style="width:35%; text-align:right">
+			<h3><i>	 EAAI </i></h3>
+		</th>
+	</tr>
+</table>
+
+<table style="font-family: roboto; border-top: 1px solid #004D40; color:#004D40" id="footer_content">
+	<tr style='font-size:14px'>
+		<th style="width:100% ;text-align:center; padding-top:3px">
+			<h5>Aeropuerto Internacional Augusto C. Sandino</h5>
+		</th>
+	</tr>
+</table>
+
+
+<table style="font-family: roboto;">
+	<tr style='font-size:14px'>
+		<th style="width:65% ; text-align:left">
+			Nota: {{note.id}}
+		</th>
+		<th style="width:35%; text-align:right">
+			{{note.created_at|date:"D, d M Y @H:i T"}}
+		</th>
+	</tr>
+	<tr style='font-size:13px'>
+		<th style="width:65% ; text-align:left">
+			{{note.created_by.get_full_name}}
+		</th>
+		<th style="width:35%; text-align:right">
+			Turno: {{note.turn}}
+		</th>
+	</tr>
+	<tr style='font-size:12px'>
+		<th style="width:50%;text-align:left">
+			Posicion1 [{% if note.dependency.id = 1 %}TWR{% else %}EJ{% endif %}]: {{note.position1.get_full_name}}
+		</th>
+		<th style="width:50%; text-align:left">
+			Posicion2 [{% if note.dependency.id = 1 %}GND{% else %}PL{% endif %}]: {{note.position2.get_full_name}}
+		</th>
+	</tr>
+	<tr style='font-size:12px'>
+		<th style="width:65% ; text-align:left">
+			Dependencia: {{note.dependency}}
+		</th>
+	</tr>	
+</table>
+<div style='font-size:12px'>
+		{% autoescape off %}
+			{{note.description}}
+		{% endautoescape %}	
+</div>
+<div  style="border-top:1px double #BDBDBD">
+	&nbsp;
+</div>
+
+</body>
+</html>

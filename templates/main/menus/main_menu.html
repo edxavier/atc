@@ -1,0 +1,42 @@
+<!--<div class="android-navigation-container">
+    <i class="user icon"></i>{{ user.username }}
+</div>
+<button class="android-more-button mdl-button mdl-js-button mdl-button--icon mdl-js-ripple-effect" id="more-button">
+    <i class="material-icons">arrow_drop_down</i>
+</button>
+<ul class="mdl-menu mdl-js-menu mdl-menu--bottom-right mdl-js-ripple-effect" for="more-button">
+    <li class="mdl-menu__item"><i class="refresh icon"></i>Cambiar clave</li>
+    <li class="mdl-menu__item"><i class="user icon"></i>Mi cuenta</li>
+    <a href="{% url 'logout'  %}"><li class="mdl-menu__item"><i class="sign out icon"></i> Cerrar sesion</li></a>
+</ul>-->
+
+
+	<div class="ui fixed inverted blue menu">
+		<div class="ui container">
+			<a href="{% url 'home' %}" class="header item">
+                <i class="book icon"></i>
+				Bitacora ATC
+			</a>
+			<a href="{% url 'home' %}" class="item">Inicio</a>
+			<div class="ui simple dropdown item">
+				Bitacora <i class="dropdown icon"></i>
+				<div class="menu">
+					<a class="item" href="{% url 'home' %}"><i class="book icon"></i>Notas</a>
+					{% if perms.bitacora.can_search %}
+					<a class="item" href="{% url 'notes_search' %}"><i class="search icon"></i>Busqueda avanzada</a>
+					{% endif %}
+				</div>
+			</div>
+			<div class="right item">
+	          <div class="ui simple dropdown">
+				<i class="user icon"></i>{{ user.username }} <i class="dropdown icon"></i>
+				<div class="menu">
+					<a class="item" href="#"><i class="refresh icon"></i>Cambiar clave</a>
+					<a class="item" href="#"><i class="user icon"></i>Mi cuenta</a>
+					<div class="divider"></div>
+					<a class="item" href="{% url 'logout'  %}"><i class="sign out icon"></i> Cerrar sesion</a>
+				</div>
+			</div>
+        </div>
+		</div>
+	</div>

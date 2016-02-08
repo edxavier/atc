@@ -1,0 +1,71 @@
+          {# Each "contact" is a Contact model object. #}
+<div class="ui raised padded container segment" ng-repeat="note in notes.results">
+        <div class="ui items"  id="[[note.id]]">
+        <h3 class="ui dividing header">
+          [[note.dependency == 1? 'Sandino Torre' : 'Sandino Aproximacion']]: &nbsp;
+          TURNO <span ng-if="note.turn==1">ALFA</span>
+            <span ng-if="note.turn==2">BRAVO</span>
+            <span ng-if="note.turn==3">CHARLIE</span>
+         <div class="sub header">
+             <i class="wait icon"></i>[[note.created_at | date:'dd-MM-yyyy &nbsp; @HH:mm utc']] <br>
+             <i class="user icon"></i>[[note.controler0]]
+         </div>
+        </h3>
+        <div class="item">
+          <div class="content">
+            <div class="description">
+            <div class="text" ng-bind-html="note.description">
+            </div>
+            </div>
+            <div class="extra">
+                <div class="ui label" ng-if="note.dependency==1"><i class="sound icon"></i> TWR: [[note.controler1]] </div>
+                <div class="ui label" ng-if="note.dependency!=1"><i class="sound icon"></i> EJ: [[note.controler1]] </div>
+                <div class="ui label" ng-if="note.dependency==1"><i class="sound icon"></i> GND: [[note.controler2]] </div>
+                <div class="ui label" ng-if="note.dependency!=1"><i class="sound icon"></i> PL: [[note.controler2]] </div>
+
+                <div class="ui right floated tiny orange button" ng-show="note.open && note.created_by == {{user.id}}" 
+                      ng-click="close_note([[note.id]], [[note]])">
+                    <i class="folder icon"></i> Cerrar nota
+                </div>
+
+                {% if perms.bitacora.can_export %}
+                  <a href="/binnacle/report/[[note.id]]" class="ui right floated tiny blue button" target="_blank">
+                    <i class="file pdf outline icon"></i> Exportar
+                  </a>
+                {% endif %}
+            </div>
+          </div>
+        </div>
+        <form class="ui reply form" ng-show="note.open && note.created_by == {{user.id}}" 
+              name="anotateForm" ng-submit="write_to_note(anotateForm.$valid, [[note.id]], [[note]], anotacion.description)" novalidate>
+              <h5 class="ui dividing header">Formulario de edicion</h5>
+              <ng-form name="noteFieldForm">
+              <div class="field" ng-init='initSelect2()'>
+                  <label>Clasifica el tipo de anotacion si aplica</label>
+                  {{ edit_form.annotations_tags }}
+              </div>
+              <div class="field">
+              
+                <textarea ckeditor="editorOptions" ng-model="note.description2" ng-minlength="20" required placeholder="Agrega tu anotacion" ng-if="!note.edit"></textarea>
+
+                <textarea ckeditor="editorOptions" ng-model="note.description" ng-minlength="20" required placeholder="Agrega tu anotacion" ng-if="note.edit"></textarea>
+              
+
+              </div>
+                <div class="field">
+                  <div class="ui toggle checkbox">
+                    <input type="checkbox" name="public" ng-model="note.edit">
+                    <label>Editar el contenido de la nota</label>
+                  </div>
+                </div>
+            </ng-form> <br>
+
+            <button  type="submit" class="ui green labeled submit icon button" ng-disabled="anotateForm.$invalid" ng-if="note.edit">
+                <i class="icon edit"></i> Guardar cambios
+            </button>
+            <button  type="submit" class="ui green labeled submit icon button" ng-disabled="anotateForm.$invalid" ng-if="!note.edit">
+                <i class="icon edit"></i> Agregar anotacion
+            </button>
+        </form>
+        </div>
+</div>

@@ -1,0 +1,132 @@
+{% extends "main/base.html" %}
+
+{% block page_title %}
+	Bitacora ATC
+{% endblock page_title %}
+
+{% block main_menu %}		      	
+  {% include "main/menus/main_menu.html" %}
+{% endblock main_menu %}
+
+{% block drawer %}		
+{% include "main/menus/main_drawer.html" %}
+{% endblock drawer %}
+
+{% block content %}
+
+	<div class="ui large breadcrumb" style="margin-left: 20px; margin-right: auto; ">
+	  <a class="section">Bitacora</a>
+	  <i class="right angle icon divider"></i>
+	  <div class="active section">Notas</div>
+	</div>
+
+<div class="mdl-grid" ng-controller="homeCtrl">
+  <div class="mdl-cell mdl-cell--12-col">
+    <div class="ui container">
+      
+        {% if perms.bitacora.add_note %}
+          <button class="ui sticky blue fluid button" id="open_note_link"><i class="file icon"></i>Abrir nueva nota</button>
+          {% else %}
+          <button class="ui sticky blue fluid button disabled"><i class="file icon"></i>Abrir nueva nota</button>
+        {% endif %}
+         
+      {% if perms.bitacora.can_list %}   
+
+        <h2 class="ui header" ng-show="notes.results.length <= 0">
+          <i class="info icon"></i>
+          <div class="content">
+            No existen registros de notas aun
+          </div>
+        </h2>
+          
+        <h5 class="ui horizontal divider header" ng-show="notes.results.length > 0"> 
+          Pagina [[notes.number]] de [[notes.count]]
+        </h4>
+
+        {% include "main/notes.html" %} 
+
+        <h5 class="ui horizontal divider header" ng-show="notes.results.length > 0">
+          Pagina [[notes.number]] de [[notes.count]]
+        </h5>
+          <button class="ui right floated brown tiny button pager" ng-show="notes.results.length > 0"
+              ng-class="{'disabled':notes.next == null}" ng-click="navigate('?page='+notes.count)">  
+            Utimo <i class="caret right icon"></i>
+          </button>
+          <button class="ui right floated brown tiny button pager" ng-show="notes.results.length > 0"
+              ng-class="{'disabled':notes.next == null}" ng-click="navigate(notes.next)">  
+            Siguiente <i class="arrow right icon"></i>
+          </button>
+
+          <button class="ui left floated brown tiny button pager" ng-show="notes.results.length > 0"
+              ng-class="{'disabled':notes.previous == null}" ng-click="navigate('?page=1')">  
+            <i class="caret left icon"></i> Primero
+          </button>
+          <button class="ui left floated brown tiny  button pager" ng-show="notes.results.length > 0"
+            ng-class="{'disabled':notes.previous == null}" ng-click="navigate(notes.previous)"> 
+            <i class="arrow left icon"></i>Anterior
+          </button>  
+        
+        {% else %}
+          <h4 class="ui horizontal divider header header" >
+            <i class="hide icon"></i>
+            <div class="content">
+              Usted no tiene permiso para visualizar notas
+            </div>
+          </h4>
+        {% endif %}  
+    </div>
+
+      {% include "main/open_note.html" %}
+
+      <div class="ui dimmer">
+        <div class="ui text loader">Carganado...</div>
+      </div>
+</div>
+{% endblock content %}
+
+{% load staticfiles %}
+{% block extra_js %}
+
+  <link rel="stylesheet" href="{% static "bower_components/select2/dist/css/select2.min.css" %}">
+
+  <link rel="stylesheet" href="{% static "bower_components/ckeditor/contents.css" %}">
+
+
+<script src="{% static "bower_components/angularjs/angular.min.js" %}"></script>
+    <script src="{% static "bower_components/angular-sanitize/angular-sanitize.min.js" %}"></script>
+<script src="{% static "js/app_home.js" %}"></script>
+
+
+    <script src="{% static "bower_components/select2/dist/js/select2.full.min.js" %}"></script>
+
+    <script src="{% static "bower_components/ckeditor/ckeditor.js" %}"></script>
+    <script src="{% static "bower_components/ng-ckeditor/ng-ckeditor.min.js" %}"></script>
+
+
+<script type="text/javascript" charset="utf-8" async defer>
+    $(function() {
+
+
+        $('#open_note_link').click(function(event) {
+      /* Act on the event */
+      $('.modal')
+      .modal('show');
+    });
+
+        $('ui.toggle.checkbox').checkbox();
+    
+        $(".pager").click(function (){
+                $('html, body').animate({
+                    scrollTop: $(".main.container").offset().top
+                }, 500);});
+    });
+
+
+
+$(document).ready(function() {
+  //$("select").select2();
+
+});
+
+</script>
+{% endblock extra_js %}

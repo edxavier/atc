@@ -1,0 +1,155 @@
+{% extends "main/base.html" %}
+
+
+{% block main_menu %}		      	
+  {% include "main/menus/main_menu.html" %}
+{% endblock main_menu %}
+
+{% block content %}
+
+	<div class="ui breadcrumb" style="margin-left: 20px; margin-right: auto; ">
+	  <a class="section">Bitacora</a>
+	  <i class="right angle icon divider"></i>
+	  <div class="active section">Busqueda avanzada</div>
+	</div>
+
+<div class="mdl-grid" ng-controller="searchCtrl">
+  <div class="mdl-cell mdl-cell--12-col">
+    <div class="ui container">
+
+        <div class="ui raised padded container segment">
+          <form class="ui form"  name="openNoteForm" ng-submit="filter_notes(openNoteForm.$valid)" novalidate>
+              <h5 class="ui dividing header">Formulario de busqueda</h5>
+            <div class="two fields">
+              <div class="field">
+                <label>Fecha de inicio</label>
+                <div class="ui left icon input">
+                  <input type="text" ng-model="search.initDate" id="initF" placeholder="Desde" required>
+                  <i class="calendar icon"></i>
+                </div>
+              </div>
+              <div class="field">
+                <label>Fecha fin</label>
+                <div class="ui left icon input">
+                  <input type="text" ng-model="search.endDate" id="endF" placeholder="Hasta" required >
+                  <i class="calendar icon"></i>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="three fields">
+              <div class="field">
+                <label><i class="flag icon"></i>Dependencia</label>
+                  {{ form.dependency}}
+              </div>
+              <div class="field">
+                <label><i class="wait icon"></i> Turno</label>
+                  {{ form.turn }}
+              </div>
+              <div class="field">
+                <label><i class="sound icon"></i>Posicion1</label>
+                  {{ form.position1}}
+              </div>
+              <div class="field">
+                <label><i class="sound icon"></i>Posicion2</label>
+                  {{ form.position2}}
+              </div>
+            </div>
+
+
+            <div class="field">
+              <div class="field">
+                <label>Clasificacion de notas</label>
+                <div class="ui left icon input">
+                  {{form.annotations_tags}}
+                </div>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="field">
+                <label>Palabra o frase en la nota</label>
+                <div class="ui left icon input">
+                  <input type="text" placeholder="Palabra o frase clave a buscar" ng-model="search.description" >
+                  <i class="font icon"></i>
+                </div>
+              </div>
+            </div>
+            <button  type="submit" class="ui pink button" ng-disabled="openNoteForm.$invalid">
+               <i class="search icon"></i> Buscar notas
+            </button>
+
+          </form>
+    </div>
+
+        {% include "bitacora/search_result.html" %}
+
+    </div>
+</div>
+
+
+      <div class="ui dimmer">
+        <div class="ui text loader">Loading</div>
+      </div>
+{% endblock content %}
+
+{% load staticfiles %}
+{% block extra_js %}
+<link rel="stylesheet" href="{% static "bower_components/select2/dist/css/select2.min.css" %}">
+    <link rel="stylesheet" href="{% static "bower_components/uikit/css/components/datepicker.almost-flat.min.css" %}">
+
+<script src="{% static "bower_components/angularjs/angular.min.js" %}"></script>
+    <script src="{% static "bower_components/angular-sanitize/angular-sanitize.min.js" %}"></script>
+<script src="{% static "js/app_search.js" %}"></script>
+
+    <script src="{% static "bower_components/uikit/js/components/datepicker.min.js" %}"></script>
+    <script src="{% static "bower_components/moment/min/moment.min.js" %}"></script>
+
+     <script src="{% static "bower_components/select2/dist/js/select2.full.min.js" %}"></script>
+
+<script type="text/javascript" charset="utf-8" async defer>
+	$(function() {
+
+        var fecha_i = UIkit.datepicker($("#initF"), {
+        format:'DD/MM/YYYY',
+        i18n: { months:['Enero', 'Febrero','Marzo','Abril','Mayo','Junio',
+            'Julio', 'Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+            weekdays:['Dom','Lun','Mar','Mie','Jue','Vie','Sab'] },
+        maxDate: 0,
+    });
+        var fecha_f = UIkit.datepicker($("#endF"), {
+        format:'DD/MM/YYYY',
+        i18n: { months:['Enero', 'Febrero','Marzo','Abril','Mayo','Junio',
+            'Julio', 'Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+            weekdays:['Dom','Lun','Mar','Mie','Jue','Vie','Sab'] },
+        maxDate: 1,
+    });
+
+        fecha_f.on('hide.uk.datepicker', function(event) {
+          var dayi = moment($("#initF").val(), "DD/MM/YYYY");
+          var dayf = moment($("#endF").val(), "DD/MM/YYYY");
+          //verificar si mi fi es despues de mi ff si es asi igualarlas
+          if(dayi.isValid() && dayf.isBefore(dayi)){
+            $("#initF").val($("#endF").val())
+          }
+           
+        });
+
+        fecha_i.on('hide.uk.datepicker', function(event) {
+          var dayi = moment($("#initF").val(), "DD/MM/YYYY");
+          var dayf = moment($("#endF").val(), "DD/MM/YYYY");
+
+          //verificar si mi fi es despues de mi ff si es asi igualarlas
+          if(dayf.isValid() && dayi.isAfter(dayf)){
+              $("#endF").val($("#initF").val())   
+          }
+
+        });
+        
+        $('#id_position1').select2();
+        $('#id_position2').select2();
+
+	});
+</script>
+{% endblock extra_js %}

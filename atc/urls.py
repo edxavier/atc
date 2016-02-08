@@ -13,9 +13,25 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
+from django.contrib.auth.decorators import login_required
+from django.conf import settings
+from django.conf.urls.static import static
+from myapps.home import views
+from .api_urls import router
+from myapps.accounts.urls import accounts_patterns
+from myapps.bitacora.urls import binnacle_patterns
 
 urlpatterns = [
+    url(r'^api/', include(router.urls)),
+    url(r'^$', login_required(views.Home.as_view()), name='home'),
     url(r'^admin/', admin.site.urls),
+    url(r'^accounts/', include(accounts_patterns)),
+    url(r'^binnacle/', include(binnacle_patterns)),
 ]
+
+
+if settings.DEBUG:
+    urlpatterns = urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    #urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

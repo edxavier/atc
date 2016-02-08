@@ -1,0 +1,28 @@
+{
+  "name": "atc",
+  "version": "1.0.0",
+  "homepage": "https://github.com/edxavier/atc",
+  "authors": [
+    "Eder Xavier Rojas <edxavier05@gmail.com>"
+  ],
+  "description": "Librerias js para proyecto bitacora atc",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "material-design-lite": "~1.0.6",
+    "semantic-ui": "~2.1.8",
+    "angularjs": "~1.4.9",
+    "angular-sanitize": "~1.4.9",
+    "uikit": "~2.24.3",
+    "moment": "~2.11.1",
+    "select2": "~4.0.1",
+    "angular-froala": "~2.1.0",
+    "ckeditor": "~4.5.6"
+  }
+}

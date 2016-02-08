@@ -1,0 +1,55 @@
+          {# Each "contact" is a Contact model object. #}
+<div ng-if="notes">
+  <div class="ui info message">
+    <div class="header">[[notes.length]] notas encontradas</div>
+    <p>
+       {% if perms.bitacora.can_export %}
+        <a class="ui right tiny teal button" target="_blank" ng-if="notes.length>0" ng-click="export_all()">
+          <i class="file pdf outline icon"></i> Exportar todas
+        </a>
+        <a class="ui right tiny teal button" target="_blank" ng-if="notes.length>0" ng-click="export_selected()">
+          <i class="file pdf outline icon"></i> Exportar seleccionados
+        </a>
+      {% endif %}
+    </p>
+  </div>
+
+</div>
+<div class="ui raised padded container segment" ng-repeat="note in notes">
+        <div class="ui items"  id="[[note.id]]">
+        <h3 class="ui dividing header">
+          [[note.dependency == 1 ? 'Sandino Torre' : 'Sandino Aproximacion']]: &nbsp;
+          TURNO <span ng-if="note.turn==1">ALFA</span>
+            <span ng-if="note.turn==2">BRAVO</span>
+            <span ng-if="note.turn==3">CHARLIE</span>
+         <div class="sub header">
+             <i class="wait icon"></i>[[note.created_at | date:'dd-MM-yyyy &nbsp; @HH:mm utc']] <br>
+             <i class="user icon"></i>[[note.controler0]]
+         </div>
+        </h3>
+        <div class="item">
+          <div class="content">
+            <div class="description">
+            <div class="text" ng-bind-html="note.description">
+            </div>
+            </div>
+            <div class="extra">
+                <div class="ui label" ng-if="note.dependency==1"><i class="sound icon"></i> TWR: [[note.controler1]] </div>
+                <div class="ui label" ng-if="note.dependency!=1"><i class="sound icon"></i> EJ: [[note.controler1]] </div>
+                <div class="ui label" ng-if="note.dependency==1"><i class="sound icon"></i> GND: [[note.controler2]] </div>
+                <div class="ui label" ng-if="note.dependency!=1"><i class="sound icon"></i> PL: [[note.controler2]] </div>
+                {% if perms.bitacora.can_export %}
+                  <a href="/binnacle/report/[[note.id]]" class="ui right floated tiny blue button" target="_blank">
+                    <i class="file pdf outline icon"></i> Exportar
+                  </a>
+                  <div class="ui checkbox">
+                    <input type="checkbox" ng-model="note.selected">
+                    <label>Seleccionar</label>
+                  </div>
+                {% endif %}
+            </div>
+          </div>
+        </div>
+        </div>
+</div>
+

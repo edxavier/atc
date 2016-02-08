@@ -1,0 +1,49 @@
+
+    <div class="ui modal">
+      <div class="header">Abrir nota en bitacora</div>
+      <div class="content">
+
+        <form class="ui form"  name="openNoteForm" ng-submit="open_note(openNoteForm.$valid)" novalidate>
+
+          <div class="two fields">
+            <div class="required field" ng-class="{'error': openNoteForm.ucs.$invalid && !openNoteForm.ucs.$pristine}">
+              <label>Dependencia</label>
+              {{ form.dependency }}
+            </div>    
+            <div class="required field" ng-class="{'error': openNoteForm.turn.$invalid && !openNoteForm.turn.$pristine}">
+              <label>Turno</label>
+              {{ form.turn }}
+            </div>
+          </div>
+
+          <div class="two fields">
+            <div class="required field" 
+            ng-class="{'error': openNoteForm.position1.$invalid && !openNoteForm.position1.$pristine}">
+              <label>(EJ o TWR)</label>
+              {{ form.position1 }}
+            </div>
+
+            <div class="required field" ng-class="{'error': openNoteForm.position2.$invalid && !openNoteForm.position2.$pristine}">
+              <label>(PL o GND)</label>
+              {{ form.position2 }}
+            </div>        
+          </div>
+
+          <div class="field">
+            <label>Clasifica el tipo de anotacion si aplica</label>
+            {{ form.annotations_tags }}
+          </div>
+          <div class="field">
+            <label>Anotacion inicial (opcional)</label>
+            {{ form.description }}
+          </div>
+          <br>
+        <div class="actions">
+          <button  type="submit" class="ui green positive button" ng-disabled="openNoteForm.$invalid">
+               Guardar <span class="glyphicon glyphicon-floppy-save"></span>
+          </button>
+          <div class="ui cancel orange button">Cancelar</div>
+        </div>
+        </form>
+        </div>
+    </div>
