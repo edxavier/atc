@@ -11,9 +11,15 @@
 	
 	<link rel="stylesheet" type="text/css" href="{% static "bower_components/semantic-ui/dist/semantic.min.css" %}">
 	<script src="{% static "bower_components/semantic-ui/dist/semantic.min.js" %}"></script>
+
+    <style>
+        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .ng-hide {
+            display: none !important;
+        }
+    </style>
 	
 </head>
-<body>
+<body >
 
 {% block main_menu %}
 {% endblock main_menu %}

@@ -19,8 +19,8 @@ app.controller('searchCtrl', function($scope, $http){
             var filter_str = "?min_date="+$scope.search.initDate+"&max_date="+$scope.search.endDate
             if($scope.search.turn)
                 filter_str += "&turn="+ $scope.search.turn
-            if($scope.search.ucs)
-                filter_str += "&ucs="+ $scope.search.ucs
+            if($scope.search.dependency)
+                filter_str += "&dependency="+ $scope.search.dependency
             if($scope.search.position1)
                 filter_str += "&position1="+ $scope.search.position1
             if($scope.search.position2)

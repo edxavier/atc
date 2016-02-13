@@ -9,8 +9,8 @@ class UsuarioAdmin(UserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 
-    list_display = ('username', 'email', 'is_staff', 'is_active')
-    list_filter = ('username', 'is_staff', 'is_active')
+    list_display = ('username', 'first_name', 'last_name', 'is_staff', 'is_active')
+    list_filter = ('groups', 'is_staff', 'is_active')
 
     fieldsets = (
         ('Informacion de Acceso', {'fields': ('username', 'password')}),
@@ -25,7 +25,7 @@ class UsuarioAdmin(UserAdmin):
          {'fields': ('email',)}),
     )
 
-    search_fields = ('email',)
+    search_fields = ('email','username', 'first_name')
     ordering = ('username', 'email',)
     filter_horizontal = ('groups', 'user_permissions',)
 

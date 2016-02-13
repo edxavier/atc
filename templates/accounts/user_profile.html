@@ -1,0 +1,96 @@
+{% extends "main/base.html" %}
+
+{% block main_menu %}               
+  {% include "main/menus/main_menu.html" %}
+{% endblock main_menu %}
+
+{% block page_title %}
+	Cambio de Contraseña
+{% endblock page_title %}
+
+{% block content %}
+
+
+  <div class="mdl-cell mdl-cell--12-col">
+    <div class="ui container">
+        <div class="ui raised padded container segment">
+
+          <form class="ui form" method="post">
+              {% csrf_token %}
+              <h5 class="ui dividing header">Datos de usuario</h5>
+            <div class="field">
+              <label>Nombre de usuario</label>
+               <div class="ui left icon input">
+                <input type="text" placeholder="Nombre de usuario" value="{{user.username}}" readonly>
+                <i class="user icon"></i>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Nombres</label>
+               <div class="ui left icon input">
+                <input type="text" placeholder="Escriba su nombres" value="{{user.first_name}}" name="first_name">
+                <i class="legal icon"></i>
+              </div>
+            </div>
+
+            <div class="field">
+              <label>Apellidos</label>
+               <div class="ui left icon input">
+                <input type="text" placeholder="Escriba sus apellidos" value="{{user.last_name}}" name="last_name">
+                <i class="legal icon"></i>
+              </div>
+            </div>
+            
+            <div class="field">
+              <label>Grupos</label>
+               {% for group in user.groups.all %}
+                    <div class="ui teal label">
+                      <i class="users icon"></i> {{ group.name }}
+                    </div>
+                {% empty %}
+                    <h5>No pertenece a ningun grupo aun</h5>
+              {% endfor %}
+            </div>
+            <div class="field">
+              <div class="ui accordion">
+                <div class="title">
+                  <i class="dropdown icon"></i>
+                  Permisos de usuario
+                </div>
+                <div class="content">
+                    <div class="ui divided selection list">
+                     {% for p in user_perms %}
+                          <a class="item">
+                            <div class="ui teal horizontal label"> {{ p }}</div>
+                          </a>
+                      {% empty %}
+                          <h5>No pertenece a ningun grupo aun</h5>
+                    {% endfor %}
+                    </div>
+                </div>
+                </div>
+              
+            </div>
+
+            <br>
+            <button  type="submit" class="ui pink button" ng-disabled="openNoteForm.$invalid">
+               <i class="check icon"></i> Guardar cambios
+            </button>
+          </form>
+    </div>
+
+
+    </div>
+  </div>
+{% endblock content %}
+
+{% load staticfiles %}
+{% block extra_js %}
+  <script>
+
+    $(function() {
+      $('.ui.accordion').accordion();
+    }); 
+  </script>
+{% endblock extra_js %}

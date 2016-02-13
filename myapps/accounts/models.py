@@ -48,7 +48,10 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
             ("change_task_status", "Can change the status of tasks"),
         )'''
     def __unicode__(self):
-        return self.username
+        if self.first_name:
+            return self.first_name + ' ' + self.last_name
+        else:
+            return self.username
 
     def get_short_name(self):
         return self.username

@@ -1,0 +1,70 @@
+{% extends "main/base.html" %}
+
+{% block main_menu %}               
+  {% include "main/menus/main_menu.html" %}
+{% endblock main_menu %}
+
+{% block page_title %}
+	Cambio de Contraseña
+{% endblock page_title %}
+
+{% block content %}
+
+{% if form.old_password.errors or  form.new_password2.errors  %}   
+                <div class="ui warning message">
+                    <div class="header">Corrigue lo siguiente:</div>
+                    {{ form.old_password.errors }}
+                    {{ form.new_password2.errors }}
+                </div>
+            {% endif %} 
+        
+  <div class="mdl-cell mdl-cell--12-col">
+    <div class="ui container">
+        <div class="ui raised padded container segment">
+
+          <form class="ui form" method="post">
+              <h5 class="ui dividing header">Formulario de cambio de contraseña</h5>
+            {% csrf_token %}
+            <div class="field">
+              <div class="field">
+                <div class="ui left icon input">
+                  <input type="password" placeholder="Contraseña actual" name="old_password">
+                  <i class="lock icon"></i>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <div class="field">
+                
+                <div class="ui left icon input">
+                  <input type="password" placeholder="Nueva contraseña" name="new_password1">
+                  <i class="lock icon"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="field">
+                <div class="ui left icon input">
+                  <input type="password" placeholder="Confirma tu nueva contraseña" name="new_password2">
+                  <i class="lock icon"></i>
+                </div>
+              </div>
+            </div>
+
+            <button  type="submit" class="ui pink button" ng-disabled="openNoteForm.$invalid">
+               <i class="check icon"></i> Guardar cambios
+            </button>
+
+          </form>
+    </div>
+
+
+    </div>
+  </div>
+{% endblock content %}
+
+{% load staticfiles %}
+{% block extra_js %}
+
+{% endblock extra_js %}

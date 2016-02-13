@@ -1,13 +1,14 @@
           {# Each "contact" is a Contact model object. #}
-<div class="ui raised padded container segment" ng-repeat="note in notes.results">
+<div class="ui raised padded container segment" ng-repeat="note in notes.results" ng-cloak>
         <div class="ui items"  id="[[note.id]]">
         <h3 class="ui dividing header">
           [[note.dependency == 1? 'Sandino Torre' : 'Sandino Aproximacion']]: &nbsp;
-          TURNO <span ng-if="note.turn==1">ALFA</span>
-            <span ng-if="note.turn==2">BRAVO</span>
-            <span ng-if="note.turn==3">CHARLIE</span>
+          Turno <span ng-if="note.turn==1">Alfa</span>
+            <span ng-if="note.turn==2">Bravo</span>
+            <span ng-if="note.turn==3">Charlie</span>
+            <br>Nota:[[note.id]]
          <div class="sub header">
-             <i class="wait icon"></i>[[note.created_at | date:'dd-MM-yyyy &nbsp; @HH:mm utc']] <br>
+             <i class="wait icon"></i>[[note.created_at | date:'dd-MM-yyyy &nbsp; HH:mm Z': 'UTC']] <br>
              <i class="user icon"></i>[[note.controler0]]
          </div>
         </h3>
@@ -24,8 +25,13 @@
                 <div class="ui label" ng-if="note.dependency!=1"><i class="sound icon"></i> PL: [[note.controler2]] </div>
 
                 <div class="ui right floated tiny orange button" ng-show="note.open && note.created_by == {{user.id}}" 
-                      ng-click="close_note([[note.id]], [[note]])">
+                      ng-click="close_note([[note.id]], [[note]], false)">
                     <i class="folder icon"></i> Cerrar nota
+                </div>
+
+                <div class="ui right floated tiny orange button" ng-show="note.time_since < 480 && !note.open && note.created_by == {{user.id}}" 
+                      ng-click="close_note([[note.id]], [[note]], true)">
+                    <i class="open folder icon"></i> Reabrir nota
                 </div>
 
                 {% if perms.bitacora.can_export %}

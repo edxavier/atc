@@ -44,7 +44,7 @@ app.factory('binacleFactory', function ($http) {
 })
      
 app.controller('homeCtrl', function($scope, $http, binacleFactory){
-
+    $scope.index = 0
     $scope.editorOptions = {
         language: 'es',
         uiColor: '#CFD8DC',
@@ -54,6 +54,8 @@ app.controller('homeCtrl', function($scope, $http, binacleFactory){
     $('.dimmer').toggleClass('active');
     binacleFactory.getNotes(function (data) {
         $scope.notes = data;
+        for(i=0;i<data.results.length;i++)
+            $scope.notes.results[i].time_since = moment().diff(data.results[i].created_at,'minutes')
         $('.dimmer').toggleClass('active');
     })
 
@@ -61,6 +63,7 @@ app.controller('homeCtrl', function($scope, $http, binacleFactory){
         //$("select").select2();
         //$("select").val("");
     }
+
     $scope.open_note = function (isValid) {
         if(isValid){
             $scope.note_model.annotations_tags = []
@@ -78,14 +81,14 @@ app.controller('homeCtrl', function($scope, $http, binacleFactory){
                         UIkit.notify({
                             message: '<center><b>¡Aviso!</b></center>'+ error.non_field_errors[0],
                             status: 'warning',
-                            timeout: 0,
+                            timeout: 5000,
                             pos: 'top-center'
                         });
                     }else {
                         UIkit.notify({
                             message: 'Error 406: Datos invalidos',
                             status: 'danger',
-                            timeout: 0,
+                            timeout: 5000,
                             pos: 'top-center'
                         });
                     }
@@ -93,7 +96,7 @@ app.controller('homeCtrl', function($scope, $http, binacleFactory){
                     UIkit.notify({
                       message : 'Error 403: '+ error.detail,
                       status  : 'danger',
-                      timeout : 0,
+                      timeout : 5000,
                       pos     : 'top-center'
                     });
                 }
@@ -101,7 +104,7 @@ app.controller('homeCtrl', function($scope, $http, binacleFactory){
                     UIkit.notify({
                       message : 'Error 500: INTERNAL SERVER ERROR',
                       status  : 'danger',
-                      timeout : 0,
+                      timeout : 5000,
                       pos     : 'top-center'
                     });
                 }
@@ -111,11 +114,12 @@ app.controller('homeCtrl', function($scope, $http, binacleFactory){
     }
 
 
-    $scope.close_note = function (note_id, note) {
+    $scope.close_note = function (note_id, note, keep_open) {
         $('.dimmer').toggleClass('active');
         var index = $scope.notes.results.indexOf(note[0][0])
-        binacleFactory.closeNote(note_id, {'open':false}, function (data) {
+        binacleFactory.closeNote(note_id, {'open':keep_open}, function (data) {
             $scope.notes.results[index] = data;
+            $scope.notes.results[index].time_since = moment().diff($scope.notes.results[index].created_at,'minutes')
             $('.dimmer').toggleClass('active');
         }, function (error) {
             $('.dimmer').toggleClass('active');
@@ -124,6 +128,7 @@ app.controller('homeCtrl', function($scope, $http, binacleFactory){
     }
     $scope.anotacion = {}
     $scope.write_to_note = function (Valid, note_id, note) {
+
         if(Valid) {
             $('.dimmer').toggleClass('active');
             var index = $scope.notes.results.indexOf(note[0][0])
@@ -155,9 +160,34 @@ app.controller('homeCtrl', function($scope, $http, binacleFactory){
 
 
     $scope.navigate = function (page) {
-        $http.get('/api/binnacle/pages/'+page).success(function(data){
+        dep=""
+        if($scope.index > 0)
+            dep = $scope.index
+        $http.get('/api/binnacle/pages/'+page+'&dependency='+dep).success(function(data){
             $scope.notes = data;
         });
+    }
+
+    $scope.filter_user_pos = function (dep) {
+        $scope.positions = [];
+        $scope.note_model.position1 = null
+
+        $http.get('/api/accounts/users/?dependency='+dep).success(function(data){
+            $scope.positions = data;
+        });
+
+    }
+
+
+      $scope.filter_binnacle = function (dep) {
+        $scope.index = dep
+        if(dep<=0)
+            dep = ""
+        $http.get('/api/binnacle/pages/?dependency=' + dep).success(function (data) {
+                $scope.notes = data;
+                for (i = 0; i < data.results.length; i++)
+                    $scope.notes.results[i].time_since = moment().diff(data.results[i].created_at, 'minutes')
+            });
     }
 
 });

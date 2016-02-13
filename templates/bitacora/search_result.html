@@ -1,5 +1,5 @@
           {# Each "contact" is a Contact model object. #}
-<div ng-if="notes">
+<div ng-if="notes" ng-cloak>
   <div class="ui info message">
     <div class="header">[[notes.length]] notas encontradas</div>
     <p>
@@ -15,7 +15,7 @@
   </div>
 
 </div>
-<div class="ui raised padded container segment" ng-repeat="note in notes">
+<div class="ui raised padded container segment" ng-repeat="note in notes" ng-cloak>
         <div class="ui items"  id="[[note.id]]">
         <h3 class="ui dividing header">
           [[note.dependency == 1 ? 'Sandino Torre' : 'Sandino Aproximacion']]: &nbsp;
@@ -23,7 +23,7 @@
             <span ng-if="note.turn==2">BRAVO</span>
             <span ng-if="note.turn==3">CHARLIE</span>
          <div class="sub header">
-             <i class="wait icon"></i>[[note.created_at | date:'dd-MM-yyyy &nbsp; @HH:mm utc']] <br>
+             <i class="wait icon"></i>[[note.created_at | date:'dd-MM-yyyy &nbsp; HH:mm Z': 'UTC']] <br>
              <i class="user icon"></i>[[note.controler0]]
          </div>
         </h3>

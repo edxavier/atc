@@ -14,38 +14,38 @@
 
 {% block content %}
 
-	<div class="ui large breadcrumb" style="margin-left: 20px; margin-right: auto; ">
-	  <a class="section">Bitacora</a>
-	  <i class="right angle icon divider"></i>
-	  <div class="active section">Notas</div>
-	</div>
-
 <div class="mdl-grid" ng-controller="homeCtrl">
   <div class="mdl-cell mdl-cell--12-col">
     <div class="ui container">
+
+      <div class="ui three item teal secondary pointing menu">
+        <a class="item" ng-class="{'active': index==0}" ng-click="filter_binnacle(0)">Todas</a>
+        <a class="item" ng-class="{'active': index==1}" ng-click="filter_binnacle(1)">Bitacora Torre</a>
+        <a class="item" ng-class="{'active': index==2}" ng-click="filter_binnacle(2)">Bitacora Aproximacion</a>
+      </div>
       
         {% if perms.bitacora.add_note %}
-          <button class="ui sticky blue fluid button" id="open_note_link"><i class="file icon"></i>Abrir nueva nota</button>
+          <button class="ui sticky green fluid button" id="open_note_link"><i class="file icon"></i>Abrir nueva nota</button>
           {% else %}
           <button class="ui sticky blue fluid button disabled"><i class="file icon"></i>Abrir nueva nota</button>
         {% endif %}
          
       {% if perms.bitacora.can_list %}   
 
-        <h2 class="ui header" ng-show="notes.results.length <= 0">
+        <h2 class="ui header" ng-show="notes.results.length <= 0" ng-cloak>
           <i class="info icon"></i>
           <div class="content">
             No existen registros de notas aun
           </div>
         </h2>
           
-        <h5 class="ui horizontal divider header" ng-show="notes.results.length > 0"> 
+        <h5 class="ui horizontal divider header" ng-show="notes.results.length > 0" ng-cloak> 
           Pagina [[notes.number]] de [[notes.count]]
         </h4>
 
         {% include "main/notes.html" %} 
 
-        <h5 class="ui horizontal divider header" ng-show="notes.results.length > 0">
+        <h5 class="ui horizontal divider header" ng-show="notes.results.length > 0" ng-cloak>
           Pagina [[notes.number]] de [[notes.count]]
         </h5>
           <button class="ui right floated brown tiny button pager" ng-show="notes.results.length > 0"
@@ -87,12 +87,12 @@
 {% load staticfiles %}
 {% block extra_js %}
 
-  <link rel="stylesheet" href="{% static "bower_components/select2/dist/css/select2.min.css" %}">
 
   <link rel="stylesheet" href="{% static "bower_components/ckeditor/contents.css" %}">
 
 
 <script src="{% static "bower_components/angularjs/angular.min.js" %}"></script>
+
     <script src="{% static "bower_components/angular-sanitize/angular-sanitize.min.js" %}"></script>
 <script src="{% static "js/app_home.js" %}"></script>
 
@@ -101,11 +101,13 @@
 
     <script src="{% static "bower_components/ckeditor/ckeditor.js" %}"></script>
     <script src="{% static "bower_components/ng-ckeditor/ng-ckeditor.min.js" %}"></script>
-
+<script src="{% static "bower_components/moment/min/moment.min.js" %}"></script>
 
 <script type="text/javascript" charset="utf-8" async defer>
     $(function() {
 
+      $('select').dropdown();
+      $('#id_dependency').dropdown();
 
         $('#open_note_link').click(function(event) {
       /* Act on the event */

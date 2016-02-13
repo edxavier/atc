@@ -20,16 +20,17 @@ class PermsBinnacle(BasePermission):
         if request.method == "GET":
             return request.user.has_perm('bitacora.can_list')
         elif request.method == "POST":
-            if request.user.has_perm('bitacora.add_note'):
-                depend = request.data["dependency"]
-                print depend
-                print type(depend)
-                if depend == '1':
-                    return request.user.has_perm('bitacora.can_relate_twr')
+            try:
+                if request.user.has_perm('bitacora.add_note'):
+                    depend = request.data["dependency"]
+                    if depend == '1':
+                        return request.user.has_perm('bitacora.can_relate_twr')
+                    else:
+                        return request.user.has_perm('bitacora.can_relate_app')
                 else:
-                    return request.user.has_perm('bitacora.can_relate_app')
-            else:
-                return request.user.has_perm('bitacora.add_note')
+                    return request.user.has_perm('bitacora.add_note')
+            except:
+                return True
         elif request.method == "PUT":
             return True
 
@@ -74,6 +75,7 @@ class NotesPaginatedViewSet(viewsets.ModelViewSet):
     queryset = Note.objects.all().order_by('-id')
     serializer_class = NoteSerializer
     pagination_class = CustomNotesPaginator
+    filter_fields = ('dependency', )
     #permission_classes = (PermsBinnacle,)
 
 
@@ -92,7 +94,8 @@ class NotesViewSet(DjangoModelPermissions, ListModelMixin, UpdateModelMixin,
     def create(self, request, *args, **kwargs):
         user = request.user
         note_data = request.data
-        print(note_data)
+
+
         note_data['created_by'] = user.id
         serial = NoteSerializer(data=note_data)
         if serial.is_valid():

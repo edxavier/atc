@@ -7,11 +7,6 @@ from .models import Note
 from myapps.accounts.models import Usuario
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Usuario
-        fields = ('id', 'username', 'first_name', 'last_name',)
-
 class NoteSerializer(serializers.ModelSerializer):
     controler1 = serializers.SerializerMethodField(source='get_controler1')
     controler2 = serializers.SerializerMethodField(source='get_controler2')
@@ -41,12 +36,13 @@ class NoteSerializer(serializers.ModelSerializer):
             dependency = attrs['dependency']
             count = Note.objects.filter(created_at__contains=datetime.date(datetime.now()),
                                         turn=turn, dependency=dependency).count()
-            if count > 0:
-                raise serializers.ValidationError("Ya existe una nota asociada al turno "
+        except:
+            count = 0
+        if count > 0:
+            raise serializers.ValidationError("Ya existe una nota asociada al turno "
                                                   "y dependencia especificada para el dia de hoy")
-        except Exception, e:
-            return attrs
         return attrs
+
 
     class Meta:
         model = Note

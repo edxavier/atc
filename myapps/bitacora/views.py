@@ -12,6 +12,7 @@ class Search(PermissionRequiredMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         form = SearchNoteForm()
+        form.fields['annotations_tags'].empty_label = "-----------"
         return render_to_response(
             'bitacora/note_search.html', locals(), context_instance=RequestContext(request)
         )

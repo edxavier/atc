@@ -15,13 +15,12 @@
 		<div class="ui container">
 			<a href="{% url 'home' %}" class="header item">
                 <i class="book icon"></i>
-				Bitacora ATC
+				ATC-Managua
 			</a>
-			<a href="{% url 'home' %}" class="item">Inicio</a>
+			<!--<a href="{% url 'home' %}" class="item">Inicio</a>-->
 			<div class="ui simple dropdown item">
 				Bitacora <i class="dropdown icon"></i>
 				<div class="menu">
-					<a class="item" href="{% url 'home' %}"><i class="book icon"></i>Notas</a>
 					{% if perms.bitacora.can_search %}
 					<a class="item" href="{% url 'notes_search' %}"><i class="search icon"></i>Busqueda avanzada</a>
 					{% endif %}
@@ -29,12 +28,16 @@
 			</div>
 			<div class="right item">
 	          <div class="ui simple dropdown">
-				<i class="user icon"></i>{{ user.username }} <i class="dropdown icon"></i>
+				<i class="user icon"></i>{{ user }} <i class="dropdown icon"></i>
 				<div class="menu">
-					<a class="item" href="#"><i class="refresh icon"></i>Cambiar clave</a>
-					<a class="item" href="#"><i class="user icon"></i>Mi cuenta</a>
+					<a class="item" href="{% url 'change_password'  %}"><i class="refresh icon"></i>Cambiar clave</a>
+					<a class="item" href="{% url 'user_profile' user.id %}"><i class="user icon"></i>Mi cuenta</a>
+					{% if  user.is_admin%}
+						<div class="divider"></div>
+						<a class="item" href="/admin"><i class="suitcase icon"></i> Administracion</a>
+					{% endif %}
 					<div class="divider"></div>
-					<a class="item" href="{% url 'logout'  %}"><i class="sign out icon"></i> Cerrar sesion</a>
+					<a class="item" href="{% url 'logout'  %}"><i class="sign out icon"></i> Terminar sesion</a>
 				</div>
 			</div>
         </div>

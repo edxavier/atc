@@ -1,10 +1,11 @@
 from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.models import Permission
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import render, render_to_response, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template.context import RequestContext
 from django.utils.decorators import method_decorator
-from django.views.generic import View
+from django.views.generic import View, UpdateView
 from .models import Usuario
 #from django.http import JsonResponse
 
@@ -13,46 +14,40 @@ from django.contrib.auth import login, logout, authenticate
 
 
 # Create your views here.
-class Perfil(View):
-    def get(self, request, user_name, *args, **kwargs):
-        perfil = get_object_or_404(Usuario, username=user_name)
-        return render_to_response('cuentas/perfil.html',
-            locals(), context_instance=RequestContext(request))
+class UserAccountData(UpdateView):
+    model = Usuario
+    template_name = "accounts/user_profile.html"
+    fields = ["first_name", "last_name",]
+    success_url = "/"
 
+    def get_object(self, queryset=None):
+        obj = get_object_or_404(Usuario, pk=self.request.user.id)
+        return obj
 
-class ModificarPerfil(View):
-    def get(self, request, *args, **kwargs):
-        form = ModificarPerfilForm(instance=request.user)
-        return render_to_response('cuentas/actualiza_perfil.html',
-            locals(), context_instance=RequestContext(request))
+    def get(self, request, **kwargs):
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
 
-    def post(self, request, *args, **kwargs):
-        form = ModificarPerfilForm(request.POST, request.FILES,
-                                   instance=request.user)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect("/cuentas/usuario/"+str(request.user))
+        if self.request.user.is_superuser:
+            user_perms = Permission.objects.all()
         else:
-            #perfil = get_object_or_404(Perfil, usuario=request.user)
-            return render_to_response('cuentas/actualiza_perfil.html',
-                locals(), context_instance=RequestContext(request))
-            #print form.errors.as_json(escape_html=False)
-            #return JsonResponse({'ok':form.is_valid(),'errores': form.errors.as_json(escape_html=False)})
+            user_perms = self.request.user.user_permissions.all() | Permission.objects.filter(group__user=self.request.user)
+
+        return render_to_response('accounts/user_profile.html', locals(),
+            context_instance=RequestContext(request))
 
 
 class ChangepasswordForm (View):
     def get(self, request):
-       # perfil = get_object_or_404(Perfil, usuario=request.user)
         form = CambiarClaveForm(user=request.user)
-        return render_to_response('cuentas/cambiar_clave.html', locals(),
+        return render_to_response('accounts/change_passwd.html', locals(),
             context_instance=RequestContext(request))
 
     def post(self, request):
         form = CambiarClaveForm(user=request.user, data=request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect("/cuentas/usuario/"+str(request.user))
+            return HttpResponseRedirect("/")
         else:
-           # perfil = get_object_or_404(Perfil, usuario=request.user)
-            return render_to_response('cuentas/cambiar_clave.html', 
+            return render_to_response('accounts/change_passwd.html',
                 locals(), context_instance=RequestContext(request))

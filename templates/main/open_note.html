@@ -6,26 +6,39 @@
         <form class="ui form"  name="openNoteForm" ng-submit="open_note(openNoteForm.$valid)" novalidate>
 
           <div class="two fields">
-            <div class="required field" ng-class="{'error': openNoteForm.ucs.$invalid && !openNoteForm.ucs.$pristine}">
-              <label>Dependencia</label>
-              {{ form.dependency }}
-            </div>    
             <div class="required field" ng-class="{'error': openNoteForm.turn.$invalid && !openNoteForm.turn.$pristine}">
               <label>Turno</label>
               {{ form.turn }}
             </div>
+            <div class="required field" ng-class="{'error': openNoteForm.ucs.$invalid && !openNoteForm.ucs.$pristine}">
+              <label>Dependencia</label>
+              {{ form.dependency }}
+            </div>    
+          
           </div>
 
           <div class="two fields">
             <div class="required field" 
             ng-class="{'error': openNoteForm.position1.$invalid && !openNoteForm.position1.$pristine}">
               <label>(EJ o TWR)</label>
-              {{ form.position1 }}
+              <!--{{ form.position1 }}-->
+                <select name="position1" ng-model="note_model.position1"  style="width:80%" required id="id_pos1" class="ui search dropdown">
+                      <option value="">Seleccione...</option>
+                      <option ng-repeat="user in positions" value="[[user.id]]">
+                      [[user.first_name ? user.first_name + ' ' + user.last_name:user.username]] 
+                    </option>
+                </select>
             </div>
 
             <div class="required field" ng-class="{'error': openNoteForm.position2.$invalid && !openNoteForm.position2.$pristine}">
               <label>(PL o GND)</label>
-              {{ form.position2 }}
+              <!--{{ form.position2 }}-->
+              <select name="position2" ng-model="note_model.position2"  style="width:80%" required id="id_pos2" class="ui search dropdown">
+                      <option value="">Seleccione...</option>
+                      <option ng-repeat="user in positions" value="[[user.id]]">
+                      [[user.first_name ? user.first_name + ' ' + user.last_name:user.username]] 
+                    </option>
+                </select>
             </div>        
           </div>
 
