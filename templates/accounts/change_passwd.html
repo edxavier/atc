@@ -10,6 +10,13 @@
 
 {% block content %}
 
+  <div class="ui breadcrumb" style="margin-left: 20px; margin-right: auto; ">
+    <a class="section">Cuenta</a>
+    <i class="right angle icon divider"></i>
+    <div class="active section">Cambio de contraseña</div>
+  </div>
+
+
 {% if form.old_password.errors or  form.new_password2.errors  %}   
                 <div class="ui warning message">
                     <div class="header">Corrigue lo siguiente:</div>
