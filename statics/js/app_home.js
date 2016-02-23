@@ -115,15 +115,37 @@ app.controller('homeCtrl', function($scope, $http, binacleFactory){
 
 
     $scope.close_note = function (note_id, note, keep_open) {
-        $('.dimmer').toggleClass('active');
-        var index = $scope.notes.results.indexOf(note[0][0])
-        binacleFactory.closeNote(note_id, {'open':keep_open}, function (data) {
-            $scope.notes.results[index] = data;
-            $scope.notes.results[index].time_since = moment().diff($scope.notes.results[index].created_at,'minutes')
+
+        if(!keep_open) {
+            $('.close_note').modal({
+                closable: false,
+                onDeny: function () {
+                    return true;
+                },
+                onApprove: function () {
+                    //$('.dimmer').toggleClass('active');
+                    var index = $scope.notes.results.indexOf(note[0][0])
+                    binacleFactory.closeNote(note_id, {'open':keep_open}, function (data) {
+                        $scope.notes.results[index] = data;
+                        $scope.notes.results[index].time_since = moment().diff($scope.notes.results[index].created_at,'minutes')
+                      //  $('.dimmer').toggleClass('active');
+                    }, function (error) {
+                        //$('.dimmer').toggleClass('active');
+                    });
+                }
+            }).modal('show');
+        }else{
             $('.dimmer').toggleClass('active');
-        }, function (error) {
-            $('.dimmer').toggleClass('active');
-        });
+            var index = $scope.notes.results.indexOf(note[0][0])
+            binacleFactory.closeNote(note_id, {'open':keep_open}, function (data) {
+                        $scope.notes.results[index] = data;
+                        $scope.notes.results[index].time_since = moment().diff($scope.notes.results[index].created_at,'minutes')
+                        $('.dimmer').toggleClass('active');
+            }, function (error) {
+                        $('.dimmer').toggleClass('active');
+            });
+        }
+
         
     }
     $scope.anotacion = {}

@@ -25,9 +25,9 @@
       </div>
       
         {% if perms.bitacora.add_note %}
-          <button class="ui sticky green fluid button" id="open_note_link"><i class="file icon"></i>Abrir nueva nota</button>
+          <button class="ui sticky green fluid button" id="open_note_link"><i class="file icon"></i>Abrir Turno</button>
           {% else %}
-          <button class="ui sticky blue fluid button disabled"><i class="file icon"></i>Abrir nueva nota</button>
+          <button class="ui sticky blue fluid button disabled"><i class="file icon"></i>Abrir Turno</button>
         {% endif %}
          
       {% if perms.bitacora.can_list %}   
@@ -77,6 +77,8 @@
     </div>
 
       {% include "main/open_note.html" %}
+        {% include "main/modal_close.html" %}
+
 
       <div class="ui dimmer">
         <div class="ui text loader">Carganado...</div>
@@ -111,7 +113,7 @@
 
         $('#open_note_link').click(function(event) {
       /* Act on the event */
-      $('.modal')
+      $('.open_note_c')
       .modal('show');
     });
 
@@ -125,10 +127,6 @@
 
 
 
-$(document).ready(function() {
-  //$("select").select2();
-
-});
 
 </script>
 {% endblock extra_js %}
